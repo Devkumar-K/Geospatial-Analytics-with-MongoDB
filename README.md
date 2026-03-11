@@ -275,8 +275,4 @@ Through this project you will learn:
 
 ---
 
-# 📜 License
 
-This project is released under the **MIT License**.
-
----
