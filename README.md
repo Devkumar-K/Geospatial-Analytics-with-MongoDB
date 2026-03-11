@@ -1,52 +1,282 @@
-# Spatial Analysis of Japan
+# 🌍 MongoDB Geospatial Analysis with Python
 
-This project performs geospatial analysis on various features across Japan, including airports, railway stations, ports, water bodies, and administrative boundaries. It leverages **MongoDB Atlas** for spatial indexing and querying, and **Python** for data processing and visualization.
+This project demonstrates how to perform **geospatial data processing and spatial queries using MongoDB and Python**.
+The notebook loads geographic JSON datasets into MongoDB, performs CRUD operations, and executes **distance-based spatial analysis using the Haversine formula and MongoDB geospatial queries**.
 
-## Project Overview
+The project is implemented using **Python, MongoDB Atlas, and Jupyter Notebook**.
 
-The core of this project is the `spatial.ipynb` notebook, which demonstrates:
-- Connecting to a MongoDB Atlas cluster.
-- Loading GeoJSON-like data from JSON files into MongoDB.
-- Creating `2dsphere` spatial indexes for efficient geographic queries.
-- Implementing distance calculations using the **Haversine formula**.
-- Performing geospatial queries (e.g., finding features within a radius).
-- Visualizing spatial data on interactive maps using **Folium**.
+---
 
-## Prerequisites
+# 📌 Project Overview
 
-To run the notebook, you need the following Python libraries installed:
+Geospatial data is widely used in applications such as:
 
-```bash
-pip install shapely pymongo folium
+* Navigation systems
+* Location-based services
+* Logistics optimization
+* Urban planning
+* Environmental analysis
+
+This project shows how to:
+
+* Store **geographic datasets in MongoDB**
+* Perform **CRUD operations**
+* Run **geospatial queries**
+* Calculate **distances between geographic coordinates**
+* Identify **nearby geographic features**
+
+---
+
+# 🛠️ Tech Stack
+
+**Programming Language**
+
+* Python
+
+**Database**
+
+* MongoDB Atlas
+
+**Libraries**
+
+* `pymongo`
+* `shapely`
+* `math`
+* `json`
+* `urllib`
+
+**Environment**
+
+* Jupyter Notebook
+
+---
+
+# 📂 Project Structure
+
+```
+MongoDB-Geospatial-Analysis
+│
+├── spatial.ipynb        # Main notebook containing geospatial analysis
+├── datasets/            # JSON geospatial datasets (optional)
+└── README.md
 ```
 
-You also need a **MongoDB Atlas** account and a cluster configured.
+---
 
-## Dataset
+# ⚙️ Installation
 
-The project uses a variety of datasets located in the `dataset/` directory:
-- `airp_jpn.json`: Airports
-- `rstatp_jpn.json`: Railway stations
-- `portp_jpn.json`: Ports
-- `inwatera_jpn.json` & `riverl_jpn.json`: Water bodies and rivers
-- `polbnda_jpn.json`: Administrative boundaries (Prefectures/Districts)
-- `builtupp_jpn.json`: Built-up areas
-- And others (roads, ferries, etc.)
+Clone the repository:
 
-## Project Structure
+```bash
+git clone https://github.com/yourusername/mongodb-geospatial-analysis.git
+cd mongodb-geospatial-analysis
+```
 
-1.  **Installation & Connection**: Initial setup for libraries and MongoDB Atlas connection.
-2.  **Data Loading**: Scripts to parse JSON files and upload them to MongoDB with spatial indexing.
-3.  **Helper Functions**: Implementation of the Haversine formula and distance helpers.
-4.  **CRUD Operations**: Basic database operations on spatial collections.
-5.  **Geospatial Queries**:
-    *   Finding features within a specific radius using MongoDB's `$geoWithin` and `$centerSphere`.
-    *   Manual distance-based filtering and sorting for complex geometries.
-6.  **Visualization**: Generating interactive Folium maps to display airports and stations.
+Install the required Python libraries:
 
-## Usage Instructions
+```bash
+pip install pymongo
+pip install shapely
+```
 
-1.  **Configure MongoDB**: Update the connection string (`uri`) in the notebook with your Atlas credentials.
-2.  **Upload Data**: Run the loading cells to populate your `GEO_DB` database with the provided JSON files.
-3.  **Execute Analysis**: Run the query cells to find nearby features relative to specific coordinates (e.g., Tokyo Station, Sapporo).
-4.  **View Maps**: The final cells generate an interactive map of Japan with plotted features.
+---
+
+# 🔑 MongoDB Setup
+
+1. Create a **MongoDB Atlas cluster**
+2. Obtain your **connection URI**
+3. Replace credentials in the notebook:
+
+```python
+username = "YOUR_USERNAME"
+password = "YOUR_PASSWORD"
+cluster_url = "YOUR_CLUSTER_URL"
+database_name = "YOUR_DATABASE"
+```
+
+Example MongoDB connection:
+
+```python
+from pymongo.mongo_client import MongoClient
+client = MongoClient(uri)
+```
+
+---
+
+# 📊 Data Ingestion
+
+The project loads **JSON geospatial datasets** into MongoDB collections.
+
+Example document format:
+
+```json
+{
+  "name": "Example Location",
+  "coordinates": [139.6917, 35.6895],
+  "type": "Point"
+}
+```
+
+Datasets can include:
+
+* Airports
+* Railway stations
+* Ports
+* Rivers and canals
+* Built-up areas
+
+---
+
+# 🔍 CRUD Operations
+
+The notebook demonstrates basic MongoDB database operations:
+
+### Create
+
+Insert new geographic features into collections.
+
+### Read
+
+Retrieve geographic data based on filters.
+
+### Update
+
+Modify attributes of existing records.
+
+### Delete
+
+Remove records from collections.
+
+Example:
+
+```python
+db["airp_jpn"].insert_one(new_airport)
+```
+
+---
+
+# 📍 Geospatial Queries
+
+MongoDB provides powerful **geospatial operators**.
+
+Example query to find nearby features:
+
+```python
+query = {
+  "coordinates": {
+    "$geoWithin": {
+      "$centerSphere": [[lon, lat], radius]
+    }
+  }
+}
+```
+
+This allows the system to retrieve all features within a given geographic radius.
+
+---
+
+# 📏 Distance Calculation (Haversine Formula)
+
+The project calculates distances between coordinates using the **Haversine formula**, which measures the great-circle distance between two points on Earth.
+
+Formula:
+
+```
+a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+c = 2 ⋅ atan2( √a, √(1−a) )
+d = R ⋅ c
+```
+
+Where:
+
+* `R = 6371 km` (Earth radius)
+
+Example implementation:
+
+```python
+def haversine(lon1, lat1, lon2, lat2):
+    R = 6371
+```
+
+This function is used to compute distances for spatial analysis.
+
+---
+
+# 📌 Example Analyses in the Notebook
+
+The notebook performs several spatial analyses:
+
+### ✈️ Airport Data Operations
+
+* Insert and retrieve airport records
+
+### 📍 Nearby Feature Detection
+
+* Find geographic features within a **50 km radius**
+
+### 🌊 River & Canal Analysis
+
+* Identify nearby LineString features
+
+### 🚆 Nearest Railway Stations
+
+* Compute and list **10 closest railway stations** to a given point
+
+### ⚓ Port Proximity Analysis
+
+* Find ports within a specified distance
+
+### 🏙 Built-up Area Analysis
+
+* Identify nearby populated areas and display population information
+
+---
+
+# ▶️ Running the Project
+
+Start Jupyter Notebook:
+
+```bash
+jupyter notebook spatial.ipynb
+```
+
+Then run the cells sequentially to:
+
+1. Install dependencies
+2. Connect to MongoDB
+3. Load JSON data
+4. Perform CRUD operations
+5. Execute geospatial queries
+6. Compute distances using the Haversine formula
+
+---
+
+# 🚀 Possible Improvements
+
+Future enhancements could include:
+
+* Adding **MongoDB geospatial indexes**
+* Visualizing locations using **Folium or Plotly maps**
+* Building a **Flask / FastAPI API for spatial queries**
+* Creating **interactive geospatial dashboards**
+* Integrating **real-time GPS datasets**
+
+---
+
+# 📚 Learning Outcomes
+
+Through this project you will learn:
+
+* How to use **MongoDB with Python**
+* Handling **NoSQL geospatial data**
+* Performing **geospatial queries**
+* Implementing **distance calculations**
+* Conducting **location-based analytics**
+
+---
+
+# 📜 License
+
+This project is released under the **MIT License**.
+
+---
