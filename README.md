@@ -105,7 +105,7 @@ client = MongoClient(uri)
 
 # 📊 Data Ingestion
 
-The project loads **JSON geospatial datasets** into MongoDB collections.
+The project loads **JSON geospatial datasets of Japan** into MongoDB collections.
 
 Example document format:
 
@@ -117,7 +117,7 @@ Example document format:
 }
 ```
 
-Datasets can include:
+Datasets include:
 
 * Airports
 * Railway stations
